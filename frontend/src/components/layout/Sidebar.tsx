@@ -10,7 +10,7 @@ const NAV_ITEMS = [
 ] as const;
 
 export function Sidebar() {
-  const { currentView, setView, sidebarOpen, closeSidebar, planStatuses, requests } = useAppState();
+  const { chats, activeChatId, selectChat, currentView, setView, sidebarOpen, closeSidebar, planStatuses, requests } = useAppState();
 
   const doneCount = planStatuses.filter((s) => s === 'done').length;
   const requestCount = requests.length;
@@ -114,6 +114,18 @@ export function Sidebar() {
                 {requestCount}
               </span>
             )}
+          </button>
+        ))}
+      </nav>
+
+      <nav className="chat-history" aria-label="История чатов">
+        <p className="chat-history-title">Чаты</p>
+        {chats.length === 0 && <p className="chat-history-empty">Здесь появятся твои диалоги</p>}
+        {chats.map(chat => (
+          <button key={chat.id} type="button" className="chat-history-item"
+            aria-current={currentView === 'home' && activeChatId === chat.id ? 'page' : undefined}
+            onClick={() => selectChat(chat.id)} title={chat.title}>
+            <Icon name="chat" size={16} /><span>{chat.title}</span>
           </button>
         ))}
       </nav>

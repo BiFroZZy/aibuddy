@@ -70,6 +70,7 @@ function useStoreSelector<T>(selector: (state: AppState) => T): T {
 export function useAppState() {
   const state = useStoreSelector((s) => s);
 
+  const selectChat = useCallback((id: string) => store.dispatch({ type: 'SELECT_CHAT', payload: id }), []);
   const setView = useCallback((view: ViewId) => store.dispatch({ type: 'SET_VIEW', payload: view }), []);
   const toggleSidebar = useCallback(() => store.dispatch({ type: 'TOGGLE_SIDEBAR' }), []);
   const closeSidebar = useCallback(() => store.dispatch({ type: 'CLOSE_SIDEBAR' }), []);
@@ -83,6 +84,7 @@ export function useAppState() {
 
   return {
     ...state,
+    selectChat,
     setView,
     toggleSidebar,
     closeSidebar,

@@ -69,7 +69,15 @@ export interface ActionButton {
   variant?: 'primary' | 'text';
 }
 
+export interface Chat {
+  id: string;
+  title: string;
+  messages: Message[];
+}
+
 export interface AppState {
+  chats: Chat[];
+  activeChatId: string | null;
   currentView: ViewId;
   sidebarOpen: boolean;
   messages: Message[];
@@ -80,6 +88,7 @@ export interface AppState {
 }
 
 export type AppAction =
+  | { type: 'SELECT_CHAT'; payload: string }
   | { type: 'SET_VIEW'; payload: ViewId }
   | { type: 'TOGGLE_SIDEBAR' }
   | { type: 'CLOSE_SIDEBAR' }

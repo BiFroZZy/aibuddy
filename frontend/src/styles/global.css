@@ -14,3 +14,10 @@
 @media(max-width:420px){.suggestions{display:flex !important;grid-template-columns:none !important}.suggestion{flex-direction:row !important}.composer{padding:16px !important}.knowledge{font-size:10px !important}h1{font-size:28px !important}.brand small{font-size:11px !important}}
 
 .mobile-menu{display:none!important}@media(max-width:800px){.mobile-menu{display:grid!important}}
+
+.chat-history{display:grid;gap:4px;min-width:0}
+.chat-history-title,.chat-history-empty{font-size:12px;color:var(--muted);margin:0 12px 8px}
+.chat-history-item{display:flex;align-items:center;gap:8px;text-align:left;padding:10px 12px;border-radius:8px;min-width:0;width:100%;font-size:13px}
+.chat-history-item span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.chat-history-item:hover{background:var(--bg)}
+.chat-history-item[aria-current="page"]{background:var(--brand-tint);color:var(--accent-active)}

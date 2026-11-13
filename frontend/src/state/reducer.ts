@@ -12,6 +12,8 @@ const TASKS = [
 ];
 
 export const initialState: AppState = {
+  chats: [],
+  activeChatId: null,
   currentView: 'home',
   sidebarOpen: false,
   messages: [],
@@ -31,6 +33,10 @@ export function loadState(): AppState {
         return {
           ...initialState,
           ...parsed,
+          chats: Array.isArray(parsed.chats) ? parsed.chats : [],
+          activeChatId: null,
+          messages: [],
+          welcomeVisible: true,
           planStatuses: parsed.planStatuses.map((s: string) => ['done', 'running', 'todo'].includes(s) ? s : 'todo'),
         };
       }
@@ -56,7 +62,7 @@ export function loadState(): AppState {
 
 export function saveState(state: AppState): void {
   try {
-    localStorage.setItem('buddy-demo-v2', JSON.stringify({ planStatuses: state.planStatuses, requests: state.requests }));
+    localStorage.setItem('buddy-demo-v2', JSON.stringify({ planStatuses: state.planStatuses, requests: state.requests, chats: state.chats.map(chat => ({ ...chat, messages: chat.messages.map(({ actions: _actions, ...message }) => { void _actions; return message; }) })) }));
   } catch {
     // Ignore storage errors
   }
@@ -82,16 +88,27 @@ export function appReducer(state: AppState, action: AppAction): AppState {
       newState = { ...state, sidebarOpen: false };
       break;
 
-    case 'ADD_MESSAGE':
+    case 'SELECT_CHAT': {
+      const chat = state.chats.find(chat => chat.id === action.payload);
+      if (!chat) return state;
+      newState = { ...state, activeChatId: chat.id, messages: chat.messages, welcomeVisible: false, currentView: 'home', sidebarOpen: false };
+      break;
+    }
+
+    case 'ADD_MESSAGE': {
+      const id = state.activeChatId ?? action.payload.id;
+      const messages = [...state.messages, action.payload];
+      const existing = state.chats.find(chat => chat.id === id);
+      const chat = { id, title: existing?.title ?? action.payload.content.slice(0, 60), messages };
       newState = {
-        ...state,
-        messages: [...state.messages, action.payload],
-        welcomeVisible: false,
+        ...state, activeChatId: id, messages, welcomeVisible: false,
+        chats: existing ? state.chats.map(item => item.id === id ? chat : item) : [chat, ...state.chats],
       };
       break;
+    }
 
     case 'CLEAR_MESSAGES':
-      newState = { ...state, messages: [], welcomeVisible: true };
+      newState = { ...state, activeChatId: null, messages: [], welcomeVisible: true };
       break;
 
     case 'SET_WELCOME_VISIBLE':

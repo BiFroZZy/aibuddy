@@ -7,7 +7,7 @@ export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElemen
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
-  ({ label, error, helperText, className = '', id, ...props }, ref) => {
+  ({ label, error, helperText, className = '', id, style, ...props }, ref) => {
     const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
     const errorId = error ? `${inputId}-error` : undefined;
     const helperId = helperText ? `${inputId}-helper` : undefined;
@@ -38,6 +38,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
             resize: 'vertical',
             minHeight: '80px',
             fontFamily: 'inherit',
+            ...style,
           }}
           aria-invalid={error ? 'true' : 'false'}
           aria-describedby={error ? errorId : helperId}

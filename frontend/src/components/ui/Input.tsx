@@ -7,7 +7,7 @@ export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ label, error, helperText, className = '', id, ...props }, ref) => {
+  ({ label, error, helperText, className = '', id, style, ...props }, ref) => {
     const inputId = id || label?.toLowerCase().replace(/\s+/g, '-');
     const errorId = error ? `${inputId}-error` : undefined;
     const helperId = helperText ? `${inputId}-helper` : undefined;
@@ -35,6 +35,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             transition: 'border-color var(--motion-fast) var(--ease-standard), box-shadow var(--motion-fast) var(--ease-standard)',
             outline: 'none',
             boxSizing: 'border-box',
+            ...style,
           }}
           aria-invalid={error ? 'true' : 'false'}
           aria-describedby={error ? errorId : helperId}

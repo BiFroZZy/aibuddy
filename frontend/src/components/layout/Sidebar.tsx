@@ -34,7 +34,7 @@ export function Sidebar() {
         height: '100dvh',
         position: 'sticky',
         top: 0,
-        overflowY: 'auto',
+        overflow: 'hidden',
         zIndex: sidebarOpen ? 30 : 10,
       }}
       aria-label="Навигация"
@@ -120,6 +120,7 @@ export function Sidebar() {
 
       <nav className="chat-history" aria-label="История чатов">
         <p className="chat-history-title">Чаты</p>
+        <div className="chat-history-list" tabIndex={0} role="region" aria-label="Список чатов">
         {chats.length === 0 && <p className="chat-history-empty">Здесь появятся твои диалоги</p>}
         {chats.map(chat => (
           <button key={chat.id} type="button" className="chat-history-item"
@@ -128,6 +129,7 @@ export function Sidebar() {
             <Icon name="chat" size={16} /><span>{chat.title}</span>
           </button>
         ))}
+        </div>
       </nav>
 
       <div className="sidebar-bottom" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', marginTop: 'auto' }}>

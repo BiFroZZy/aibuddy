@@ -112,3 +112,19 @@ html { scrollbar-gutter: stable; }
 .app .nav .nav__item { min-width:0; font-weight:500 !important; }
 .app .nav .nav__label { min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .app .nav .count { flex-shrink:0; font-variant-numeric:tabular-nums; }
+
+/* Only conversation history scrolls; the surrounding sidebar stays fixed. */
+.app .sidebar { overflow:hidden !important; max-height:100dvh; gap:16px !important; }
+.app .sidebar > * { flex-shrink:0; }
+.app .sidebar .chat-history { display:flex; flex-direction:column; flex:1 1 0; min-height:0; gap:0; overflow:hidden; }
+.app .chat-history-title { flex-shrink:0; }
+.app .chat-history-list { display:flex; flex-direction:column; gap:4px; flex:1; min-height:0; overflow-y:auto; overflow-x:hidden; overscroll-behavior-y:contain; scrollbar-gutter:stable; padding:4px; }
+.app .chat-history-list > * { flex-shrink:0; }
+.app .chat-history-list:focus-visible { outline:2px solid var(--accent); outline-offset:-2px; border-radius:8px; }
+.app .sidebar-bottom { margin-top:0 !important; }
+@media(max-height:760px) {
+  .app .sidebar { gap:8px !important; padding-top:16px !important; padding-bottom:12px !important; }
+  .app .sidebar-bottom { gap:8px !important; }
+  .app .sidebar .mentor-link { margin-bottom:0 !important; }
+  .app .sidebar .profile { padding-top:12px !important; }
+}

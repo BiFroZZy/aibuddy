@@ -22,7 +22,6 @@
 .chat-history-item:hover{background:var(--bg)}
 .chat-history-item[aria-current="page"]{background:var(--brand-tint);color:var(--accent-active)}
 
-
 /* Adaptation plan: reserve independent space for task text and status. */
 #plan.adaptation-plan { max-width:720px !important; gap:24px; }
 #plan .plan-heading { text-align:left; }
@@ -64,7 +63,6 @@
 .custom-select-option.is-active { background:var(--brand-tint); }
 .select__label { display:block; margin-bottom:4px; color:var(--fg-2); }
 .select__error { color:var(--danger); font-size:12px; }
-
 
 /* Short motion cues; geometry stays stable while controls respond. */
 @keyframes buddy-appear {
@@ -125,7 +123,6 @@
 #materials .material-chevron { width:16px !important; height:16px !important; color:var(--muted); transform:rotate(0deg); transition:transform 240ms var(--ease-standard); }
 #materials details[open]:not([data-closing]) > summary .material-chevron { transform:rotate(180deg); }
 #materials details[open] > :not(summary) { animation:none; }
-
 
 /* Reserve the final text height so typing does not move the form below. */
 .typewriter-text { display:grid; white-space:pre-wrap; }

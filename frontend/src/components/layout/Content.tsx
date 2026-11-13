@@ -35,7 +35,7 @@ export function Content() {
         width: '100%',
       }}
     >
-      <div hidden={currentView !== 'home'}><HomeView /></div>
+      <div className="home-surface" hidden={currentView !== 'home'}><HomeView /></div>
       {currentView !== 'home' && renderView()}
       <footer className="footer" style={{ marginTop: 'auto', paddingTop: 'var(--space-6)' }}>
         <button

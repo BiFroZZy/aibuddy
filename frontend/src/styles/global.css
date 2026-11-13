@@ -64,3 +64,64 @@
 .custom-select-option.is-active { background:var(--brand-tint); }
 .select__label { display:block; margin-bottom:4px; color:var(--fg-2); }
 .select__error { color:var(--danger); font-size:12px; }
+
+
+/* Short motion cues; geometry stays stable while controls respond. */
+@keyframes buddy-appear {
+  from { opacity:0; transform:translateY(6px); }
+  to { opacity:1; transform:translateY(0); }
+}
+@keyframes buddy-menu-appear {
+  from { opacity:0; transform:translateY(-4px) scale(.98); }
+  to { opacity:1; transform:translateY(0) scale(1); }
+}
+@keyframes buddy-menu-above-appear {
+  from { opacity:0; transform:translateY(4px) scale(.98); }
+  to { opacity:1; transform:translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  button, a, input, textarea, .custom-select-trigger, .custom-select-option, summary {
+    transition:background-color 150ms var(--ease-standard), color 150ms var(--ease-standard), border-color 150ms var(--ease-standard), box-shadow 150ms var(--ease-standard), opacity 150ms var(--ease-standard), transform 150ms var(--ease-standard) !important;
+  }
+  .home-surface:not([hidden]), .content > .secondary { animation:buddy-appear 220ms var(--ease-standard); }
+  .message, .chat-history-item, .request-form, .confirmation-screen, .outcome, .empty { animation:buddy-appear 200ms var(--ease-standard); }
+  .custom-select-menu { transform-origin:top center; animation:buddy-menu-appear 150ms var(--ease-standard); }
+  .custom-select-menu--above { transform-origin:bottom center; animation-name:buddy-menu-above-appear; }
+  .custom-select-chevron { transition:transform 180ms var(--ease-standard); }
+  .send:not(:disabled):active, .suggestion:not(:disabled):active { transform:scale(.97); }
+  .composer { transition:border-color 180ms var(--ease-standard), box-shadow 180ms var(--ease-standard); }
+  .track span { transition:width 240ms var(--ease-standard) !important; }
+  .status { transition:background-color 180ms var(--ease-standard), color 180ms var(--ease-standard); }
+  details[open] > :not(summary) { animation:buddy-appear 180ms var(--ease-standard); }
+}
+@media (max-width:800px) and (prefers-reduced-motion: no-preference) {
+  .app .sidebar {
+    display:flex !important;
+    transform:translateX(-100%);
+    visibility:hidden;
+    pointer-events:none;
+    transition:transform 240ms var(--ease-standard), visibility 0s linear 240ms;
+  }
+  .app .sidebar.sidebar--open {
+    transform:translateX(0);
+    visibility:visible;
+    pointer-events:auto;
+    transition:transform 240ms var(--ease-standard), visibility 0s;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation:none !important;
+    transition:none !important;
+    scroll-behavior:auto !important;
+  }
+}
+
+/* Native accordions retain content until the measured collapse finishes. */
+#materials details.doc { overflow:hidden; }
+#materials details.doc > summary { gap:12px; }
+#materials details.doc > summary::after { content:none !important; }
+#materials details.doc > summary::-webkit-details-marker { display:none; }
+#materials .material-chevron { width:16px !important; height:16px !important; color:var(--muted); transform:rotate(0deg); transition:transform 240ms var(--ease-standard); }
+#materials details[open]:not([data-closing]) > summary .material-chevron { transform:rotate(180deg); }
+#materials details[open] > :not(summary) { animation:none; }

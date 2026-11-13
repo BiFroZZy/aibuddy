@@ -1,6 +1,7 @@
 import { useAppState } from '@/state/useAppState';
 import { Button } from '@/components/ui/Button';
 import { Icon } from '@/components/icons/Icon';
+import { AnimatedDetails } from '@/components/ui/AnimatedDetails';
 import { sourceDocs } from '@/utils/intentRouter';
 
 export function MaterialsView() {
@@ -29,10 +30,10 @@ export function MaterialsView() {
         Все инструкции ниже — учебные примеры для прототипа, а не внутренние регламенты Авито.
       </div>
 
-      <details className="team-context doc" style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', background: 'var(--surface-warm)', overflow: 'hidden' }}>
+      <AnimatedDetails className="team-context doc" style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', background: 'var(--surface-warm)', overflow: 'hidden' }}>
         <summary style={{ padding: 'var(--space-3) var(--space-4)', fontSize: 'var(--text-sm)', fontWeight: 500, cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           Контекст моей команды · Backend Team
-          <Icon name="arrow" size={16} style={{ color: 'var(--muted)', transition: 'transform var(--motion-fast)' }} />
+          <svg className="material-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
         </summary>
         <div style={{ padding: '0 var(--space-4) var(--space-4)', fontSize: 'var(--text-sm)', lineHeight: 'var(--leading-body)', color: 'var(--fg-2)' }}>
           <p style={{ margin: 'var(--space-3) 0' }}>
@@ -45,7 +46,7 @@ export function MaterialsView() {
             Контакт наставника →
           </Button>
         </div>
-      </details>
+      </AnimatedDetails>
 
       <div className="list" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-3)', marginTop: 'var(--space-4)' }}>
         {[
@@ -74,10 +75,10 @@ export function MaterialsView() {
             buttonAction: null,
           },
         ].map((doc) => (
-          <details id={'doc-' + doc.key} key={doc.key} className="doc" style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', background: 'var(--surface-warm)', overflow: 'hidden' }}>
+          <AnimatedDetails id={'doc-' + doc.key} key={doc.key} className="doc" style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', background: 'var(--surface-warm)', overflow: 'hidden' }}>
             <summary style={{ padding: 'var(--space-3) var(--space-4)', fontSize: 'var(--text-sm)', fontWeight: 500, cursor: 'pointer', listStyle: 'none', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               {doc.title}
-              <Icon name="arrow" size={16} style={{ color: 'var(--muted)' }} />
+              <svg className="material-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg>
             </summary>
             <div style={{ padding: '0 var(--space-4) var(--space-4)', fontSize: 'var(--text-sm)', lineHeight: 'var(--leading-body)', color: 'var(--fg-2)' }}>
               <p style={{ margin: 'var(--space-3) 0' }}>{sourceDocs[doc.key].body}</p>
@@ -87,7 +88,7 @@ export function MaterialsView() {
                 </Button>
               )}
             </div>
-          </details>
+          </AnimatedDetails>
         ))}
 
         <article className="doc" style={{ border: '1px solid var(--border)', borderRadius: 'var(--radius-md)', background: 'var(--surface-warm)', padding: 'var(--space-4)' }}>

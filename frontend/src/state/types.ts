@@ -32,6 +32,7 @@ export interface AccessPayload {
 }
 
 export interface Message {
+  animate?: boolean;
   id: string;
   role: 'user' | 'assistant';
   content: string;

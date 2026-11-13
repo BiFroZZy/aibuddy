@@ -3,6 +3,7 @@ import { useAppState } from '@/state/useAppState';
 import { Message as MessageType } from '@/state/types';
 import { SourceCard } from './SourceCard';
 import { RequestForm } from './RequestForm';
+import { TypewriterText } from './TypewriterText';
 import { Button } from './Button';
 
 interface MessageProps {
@@ -36,7 +37,7 @@ export function Message({ message, onActionClick, onFormSubmit }: MessageProps) 
           boxShadow: 'var(--elev-flat)',
         }}
       >
-        {message.content}
+        {isUser ? message.content : <TypewriterText text={message.content} animate={message.animate} />}
       </div>
 
       {message.sourceCard && (

@@ -62,7 +62,7 @@ export function loadState(): AppState {
 
 export function saveState(state: AppState): void {
   try {
-    localStorage.setItem('buddy-demo-v2', JSON.stringify({ planStatuses: state.planStatuses, requests: state.requests, chats: state.chats.map(chat => ({ ...chat, messages: chat.messages.map(({ actions: _actions, ...message }) => { void _actions; return message; }) })) }));
+    localStorage.setItem('buddy-demo-v2', JSON.stringify({ planStatuses: state.planStatuses, requests: state.requests, chats: state.chats.map(chat => ({ ...chat, messages: chat.messages.map(({ actions: _actions, animate: _animate, ...message }) => { void _actions; void _animate; return message; }) })) }));
   } catch {
     // Ignore storage errors
   }
@@ -91,13 +91,13 @@ export function appReducer(state: AppState, action: AppAction): AppState {
     case 'SELECT_CHAT': {
       const chat = state.chats.find(chat => chat.id === action.payload);
       if (!chat) return state;
-      newState = { ...state, activeChatId: chat.id, messages: chat.messages, welcomeVisible: false, currentView: 'home', sidebarOpen: false };
+      newState = { ...state, activeChatId: chat.id, messages: chat.messages.map(message => ({ ...message, animate: false })), welcomeVisible: false, currentView: 'home', sidebarOpen: false };
       break;
     }
 
     case 'ADD_MESSAGE': {
       const id = state.activeChatId ?? action.payload.id;
-      const messages = [...state.messages, action.payload];
+      const messages = [...state.messages, { ...action.payload, animate: action.payload.role === 'assistant' }];
       const existing = state.chats.find(chat => chat.id === id);
       const chat = { id, title: existing?.title ?? action.payload.content.slice(0, 60), messages };
       newState = {

@@ -125,3 +125,14 @@
 #materials .material-chevron { width:16px !important; height:16px !important; color:var(--muted); transform:rotate(0deg); transition:transform 240ms var(--ease-standard); }
 #materials details[open]:not([data-closing]) > summary .material-chevron { transform:rotate(180deg); }
 #materials details[open] > :not(summary) { animation:none; }
+
+
+/* Reserve the final text height so typing does not move the form below. */
+.typewriter-text { display:grid; white-space:pre-wrap; }
+.typewriter-reserve,.typewriter-visible { grid-area:1 / 1; min-width:0; overflow-wrap:anywhere; }
+.typewriter-reserve { visibility:hidden; }
+.typewriter-caret { display:inline-block; height:1em; width:2px; margin-left:2px; vertical-align:-.12em; background:var(--accent); }
+@media(prefers-reduced-motion:no-preference) {
+  .typewriter-caret { animation:buddy-caret 800ms step-end infinite; }
+}
+@keyframes buddy-caret { 0%,100% { opacity:1; } 50% { opacity:0; } }

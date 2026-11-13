@@ -17,6 +17,7 @@ const SUGGESTIONS = [
 export function HomeView() {
   const {
     messages,
+    activeChatId,
     welcomeVisible,
     planStatuses,
     addMessage,
@@ -154,7 +155,7 @@ export function HomeView() {
         </p>
       </div>
 
-      <div className="messages" id="messages" role="log" aria-live="polite" aria-label="Диалог с AI-buddy" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', minHeight: 0 }}>
+      <div key={activeChatId ?? 'new'} className="messages" id="messages" role="log" aria-live="polite" aria-label="Диалог с AI-buddy" style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 'var(--space-4)', minHeight: 0 }}>
         {messages.map((msg) => (
           <Message
             key={msg.id}

@@ -1,74 +1,107 @@
-import { SelectHTMLAttributes, forwardRef } from 'react';
+import { useEffect, useId, useRef, useState, type KeyboardEvent } from 'react';
 
 export interface SelectOption {
   value: string;
   label: string;
 }
 
-export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
+export interface SelectProps {
+  value: string;
+  onValueChange: (value: string) => void;
+  options: SelectOption[];
   label?: string;
   error?: string;
-  options: SelectOption[];
   placeholder?: string;
+  className?: string;
+  disabled?: boolean;
+  'aria-label'?: string;
 }
 
-export const Select = forwardRef<HTMLSelectElement, SelectProps>(
-  ({ label, error, options, placeholder, className = '', id, ...props }, ref) => {
-    const selectId = id || label?.toLowerCase().replace(/\s+/g, '-');
-    const errorId = error ? `${selectId}-error` : undefined;
+export function Select({ value, onValueChange, options, label, error, placeholder = 'Выбрать', className = '', disabled, 'aria-label': ariaLabel }: SelectProps) {
+  const id = useId();
+  const root = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const list = useRef<HTMLUListElement>(null);
+  const [open, setOpen] = useState(false);
+  const [above, setAbove] = useState(false);
+  const [active, setActive] = useState(0);
+  const selected = options.findIndex(option => option.value === value);
 
-    return (
-      <label className={`select-wrapper ${className}`} style={{ display: 'block', width: '100%' }}>
-        {label && (
-          <span className="select__label" style={{ display: 'block', fontSize: 'var(--text-sm)', color: 'var(--fg-2)', marginBottom: 'var(--space-1)' }}>
-            {label}
-          </span>
-        )}
-        <select
-          ref={ref}
-          id={selectId}
-          className={`select ${error ? 'select--error' : ''}`}
-          style={{
-            width: '100%',
-            padding: 'var(--space-2) var(--space-3)',
-            fontSize: 'var(--text-sm)',
-            lineHeight: 'var(--leading-body)',
-            borderRadius: 'var(--radius-md)',
-            border: error ? '1px solid var(--danger)' : '1px solid var(--border)',
-            background: 'var(--bg)',
-            color: 'var(--fg)',
-            transition: 'border-color var(--motion-fast) var(--ease-standard), box-shadow var(--motion-fast) var(--ease-standard)',
-            outline: 'none',
-            boxSizing: 'border-box',
-            appearance: 'none',
-            backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236e6e73' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`,
-            backgroundRepeat: 'no-repeat',
-            backgroundPosition: 'right var(--space-3) center',
-            paddingRight: 'var(--space-10)',
-          }}
-          aria-invalid={error ? 'true' : 'false'}
-          aria-describedby={errorId}
-          {...props}
-        >
-          {placeholder && (
-            <option value="" disabled selected hidden>
-              {placeholder}
-            </option>
-          )}
-          {options.map((opt) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </select>
-        {error && (
-          <p id={errorId} className="select__error" role="alert" style={{ marginTop: 'var(--space-1)', fontSize: 'var(--text-xs)', color: 'var(--danger)' }}>
-            {error}
-          </p>
-        )}
-      </label>
-    );
-  }
-);
+  useEffect(() => {
+    if (!open) return;
+    const outside = (event: PointerEvent) => {
+      if (!root.current?.contains(event.target as Node)) setOpen(false);
+    };
+    const reposition = () => setOpen(false);
+    document.addEventListener('pointerdown', outside);
+    window.addEventListener('resize', reposition);
+    return () => {
+      document.removeEventListener('pointerdown', outside);
+      window.removeEventListener('resize', reposition);
+    };
+  }, [open]);
 
-Select.displayName = 'Select';
+  useEffect(() => {
+    if (open) list.current?.children[active]?.scrollIntoView({ block: 'nearest' });
+  }, [open, active]);
+
+  const show = (index = Math.max(0, selected)) => {
+    if (disabled || options.length === 0) return;
+    const rect = trigger.current?.getBoundingClientRect();
+    setAbove(Boolean(rect && window.innerHeight - rect.bottom < 200 && rect.top > 200));
+    setActive(index);
+    setOpen(true);
+  };
+
+  const choose = (index: number) => {
+    const option = options[index];
+    if (!option) return;
+    onValueChange(option.value);
+    setOpen(false);
+    trigger.current?.focus();
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === 'Tab') { setOpen(false); return; }
+    if (event.key === 'Escape') {
+      if (open) { event.preventDefault(); event.stopPropagation(); setOpen(false); }
+      return;
+    }
+    if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+      event.preventDefault();
+      if (!open) { show(event.key === 'End' ? options.length - 1 : event.key === 'Home' ? 0 : Math.max(0, selected)); return; }
+      setActive(index => event.key === 'Home' ? 0 : event.key === 'End' ? options.length - 1 : (index + (event.key === 'ArrowDown' ? 1 : -1) + options.length) % options.length);
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      if (open) choose(active); else show();
+    } else if (open && event.key.length === 1) {
+      const match = options.findIndex(option => option.label.toLocaleLowerCase().startsWith(event.key.toLocaleLowerCase()));
+      if (match >= 0) { event.preventDefault(); setActive(match); }
+    }
+  };
+
+  return (
+    <div ref={root} className={`select-wrapper custom-select ${className}`}>
+      {label && <label htmlFor={id} className="select__label">{label}</label>}
+      <button ref={trigger} id={id} type="button" role="combobox" className="custom-select-trigger"
+        disabled={disabled || options.length === 0} aria-label={ariaLabel || label}
+        aria-expanded={open} aria-haspopup="listbox" aria-controls={open ? `${id}-list` : undefined}
+        aria-activedescendant={open ? `${id}-option-${active}` : undefined}
+        aria-invalid={Boolean(error)} aria-describedby={error ? `${id}-error` : undefined}
+        onClick={() => open ? setOpen(false) : show()} onKeyDown={handleKeyDown}
+        onBlur={event => { if (!root.current?.contains(event.relatedTarget)) setOpen(false); }}>
+        <span>{options[selected]?.label ?? placeholder}</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" className="custom-select-chevron"><path d="m6 9 6 6 6-6" /></svg>
+      </button>
+      {open && <ul ref={list} id={`${id}-list`} role="listbox" aria-label={ariaLabel || label || 'Варианты'} className={`custom-select-menu ${above ? 'custom-select-menu--above' : ''}`}>
+        {options.map((option, index) => <li key={option.value} id={`${id}-option-${index}`} role="option"
+          aria-selected={option.value === value} className={`custom-select-option ${active === index ? 'is-active' : ''}`}
+          onPointerMove={() => setActive(index)} onMouseDown={event => event.preventDefault()} onClick={() => choose(index)}>
+          <span>{option.label}</span>
+          {option.value === value && <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" /></svg>}
+        </li>)}
+      </ul>}
+      {error && <p id={`${id}-error`} role="alert" className="select__error">{error}</p>}
+    </div>
+  );
+}

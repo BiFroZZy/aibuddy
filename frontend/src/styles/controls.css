@@ -107,3 +107,8 @@ html { scrollbar-gutter: stable; }
   .app .custom-select-option.is-active { outline: 1px solid Highlight; }
   .app .btn--primary { border-color: ButtonText !important; }
 }
+
+/* Stable navigation geometry for both selected and unselected items. */
+.app .nav .nav__item { min-width:0; font-weight:500 !important; }
+.app .nav .nav__label { min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.app .nav .count { flex-shrink:0; font-variant-numeric:tabular-nums; }

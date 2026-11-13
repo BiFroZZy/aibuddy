@@ -103,7 +103,7 @@ export function Sidebar() {
             aria-current={currentView === item.id ? 'page' : undefined}
           >
             <Icon name={item.icon} size={18} />
-            <span style={{ flex: 1 }}>{item.label}</span>
+            <span className="nav__label" style={{ flex: 1 }}>{item.label}</span>
             {item.countId === 'planCount' && (
               <span className="count" style={{ fontSize: '11px', color: 'var(--muted)', background: 'transparent', padding: 0 }}>
                 {doneCount}/8

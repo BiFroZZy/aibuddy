@@ -1,6 +1,8 @@
 package server
 
 import (
+	"aibuddy/internal/config"
+	"aibuddy/internal/repository"
 	httptransport "aibuddy/internal/transport/http"
 	"context"
 	"database/sql"
@@ -11,7 +13,7 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
-	"aibuddy/internal/config"
+
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
@@ -53,9 +55,11 @@ func (s *Server) Start() error{
 	db.SetMaxIdleConns(5)
 	db.SetConnMaxLifetime(30 * time.Minute)
 
+	authenticator := &repository.MockTokenAuth{DB: db}
+
 	srv := &http.Server{
 		Addr:              	s.cfg.HTTPAddr,
-		Handler:          	httptransport.NewRouter(httptransport.Deps{Log: s.log, DB: db}),
+		Handler:          	httptransport.NewRouter(httptransport.Deps{Log: s.log, DB: db, Auth: authenticator}),
 		ReadHeaderTimeout: 	5 * time.Second,
 		ReadTimeout:       	10 * time.Second,
         WriteTimeout:     	30 * time.Second,

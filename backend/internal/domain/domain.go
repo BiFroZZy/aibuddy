@@ -1,7 +1,9 @@
 package domain
 
 import (
+	"encoding/json"
 	"errors"
+	"time"
 
 	"github.com/google/uuid"
 )
@@ -21,9 +23,35 @@ type Identity struct {
 	Team   string
 }
 
+type ActionStatus string
+
+const (
+	ActionPending   ActionStatus = "pending_confirmation"
+	ActionRunning   ActionStatus = "running"
+	ActionDone      ActionStatus = "done"
+	ActionFailed    ActionStatus = "failed"
+	ActionCancelled ActionStatus = "cancelled"
+	ActionDenied    ActionStatus = "denied"
+)
+
+type Action struct {
+	ID             uuid.UUID
+	UserID         uuid.UUID
+	Tool           string
+	Args           json.RawMessage
+	Result         json.RawMessage
+	Status         ActionStatus
+	IdempotencyKey string
+	ExternalID     string
+	Error          string
+	CreatedAt      time.Time
+}
+
 var (
-	ErrForbidden    = errors.New("forbidden")
-	ErrInvalidArgs  = errors.New("invalid arguments")
-	ErrNotFound     = errors.New("not found")
-	ErrUnauthorized = errors.New("unauthorized")
+	ErrUnknownTool    = errors.New("unknown tool")
+	ErrForbidden      = errors.New("forbidden")
+	ErrInvalidArgs    = errors.New("invalid arguments")
+	ErrNotFound       = errors.New("not found")
+	ErrAlreadyHandled = errors.New("action already handled")
+	ErrUnauthorized   = errors.New("unauthorized")
 )

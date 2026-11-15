@@ -18,9 +18,10 @@ type Config struct {
 }
 
 func Load(getenv func(string) string) (Config, error) {
+	var DB_URL = "postgres://"+getenv("POSTGRES_USER")+":"+getenv("POSTGRES_PASSWORD")+"@"+"localhost:"+getenv("POSTGRES_PORT")+"/"+getenv("POSTGRES_DB")+"?sslmode=disable"
 	c := Config{
 		HTTPAddr:    orDefault(getenv("HTTP_ADDR"), ":8080"),
-		DatabaseURL: strings.TrimSpace(getenv("DATABASE_URL")),
+		DatabaseURL: strings.TrimSpace(DB_URL),
 		HRURL:       orDefault(getenv("HR_URL"), "http://mock-hr:8081"),
 		MLURL:       orDefault(getenv("ML_URL"), "http://ml:8000"),
 	}

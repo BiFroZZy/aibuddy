@@ -12,13 +12,17 @@ import (
 type Config struct {
 	HTTPAddr    string
 	DatabaseURL string
+	HRURL       string // mock-hr (корпоративный сервис отсутсвий)
+	MLURL       string
 	LogLevel    slog.Level
 }
 
 func Load(getenv func(string) string) (Config, error) {
 	c := Config{
-		HTTPAddr: orDefault(getenv("HTTP_ADDR"), ":8080"),
+		HTTPAddr:    orDefault(getenv("HTTP_ADDR"), ":8080"),
 		DatabaseURL: strings.TrimSpace(getenv("DATABASE_URL")),
+		HRURL:       orDefault(getenv("HR_URL"), "http://mock-hr:8081"),
+		MLURL:       orDefault(getenv("ML_URL"), "http://ml:8000"),
 	}
 
 	var errs []error
@@ -27,7 +31,7 @@ func Load(getenv func(string) string) (Config, error) {
 	}
 	if lvl := strings.TrimSpace(getenv("LOG_LEVEL")); lvl != "" {
 		if err := c.LogLevel.UnmarshalText([]byte(lvl)); err != nil {
-			errs = append(errs,	fmt.Errorf("LOG_LEVEL: %w", err))
+			errs = append(errs, fmt.Errorf("LOG_LEVEL: %w", err))
 		}
 	}
 

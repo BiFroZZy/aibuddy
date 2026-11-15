@@ -21,6 +21,7 @@ RUN apk add --no-cache ca-certificates \
 
 WORKDIR /app
 COPY --from=builder --chown=app:app /out/aibuddy ./aibuddy
+COPY --from=builder /src/backend/migrations /app/migrations
 
 USER app
 EXPOSE 8080

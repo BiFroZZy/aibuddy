@@ -26,9 +26,13 @@ func (e *EventsRepo) Emit(ctx context.Context, userID uuid.UUID, name string, pa
 	wctx, cancel := context.WithTimeout(context.WithoutCancel(ctx), 2*time.Second)
 	defer cancel()
 
+	var userIDArg any
+	if userID != uuid.Nil {
+		userIDArg = userID
+	}
 	if _, err := e.DB.ExecContext(wctx,
 		`INSERT INTO events (user_id, name, payload) VALUES (NULLIF($1, ''), $2, $3::jsonb)`,
-		userID, name, string(b)); err != nil && e.Log != nil {
-			e.Log.Warn("emit event failed", "event", name, "err", err)
+		userIDArg, name, string(b)); err != nil && e.Log != nil {
+		e.Log.Warn("emit event failed", "event", name, "err", err)
 	}
 }

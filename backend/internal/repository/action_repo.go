@@ -92,15 +92,21 @@ func (r *ActionRepo) Claim(ctx context.Context, id uuid.UUID) (bool, error) {
 func (r *ActionRepo) Finish(ctx context.Context, id uuid.UUID, st domain.ActionStatus,
 	result json.RawMessage, externalID uuid.UUID, errText string) error {
 
-	var res sql.NullString
+	var (
+		res           any
+		externalIDArg any
+	)
 	if len(result) > 0 {
-		res = sql.NullString{String: string(result), Valid: true}
+		res = string(result)
+	}
+	if externalID != uuid.Nil {
+		externalIDArg = externalID
 	}
 	out, err := r.DB.ExecContext(ctx, `
 		UPDATE action_log
 		SET status = $2, result = $3::jsonb, external_id = NULLIF($4, ''), error = $5
 		WHERE id = $1 AND status = 'running'`,
-		id, string(st), res, externalID, errText)
+		id, string(st), res, externalIDArg, errText)
 	if err != nil {
 		return fmt.Errorf("finish action: %w", err)
 	}

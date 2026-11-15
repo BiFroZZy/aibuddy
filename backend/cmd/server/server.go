@@ -2,6 +2,7 @@ package server
 
 import (
 	"aibuddy/internal/config"
+	"aibuddy/internal/database"
 	"aibuddy/internal/repository"
 	httptransport "aibuddy/internal/transport/http"
 	"context"
@@ -54,6 +55,12 @@ func (s *Server) Start() error{
 	db.SetMaxOpenConns(10)
 	db.SetMaxIdleConns(5)
 	db.SetConnMaxLifetime(30 * time.Minute)
+
+	if err := database.Migrate(db); err != nil {
+		s.log.Error("migration fail", "error", err)
+	} else {
+		s.log.Info("Migrated successfully")
+	}
 
 	authenticator := &repository.MockTokenAuth{DB: db}
 

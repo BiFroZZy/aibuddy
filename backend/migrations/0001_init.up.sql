@@ -21,7 +21,7 @@ CREATE TABLE scenarios (
 
 CREATE TABLE scenario_steps (
     id          UUID PRIMARY KEY,
-    scenario_id TEXT NOT NULL REFERENCES scenarios(id),
+    scenario_id UUID NOT NULL REFERENCES scenarios(id),
     position    INT  NOT NULL,
     title       TEXT NOT NULL,
     description TEXT NOT NULL DEFAULT '',

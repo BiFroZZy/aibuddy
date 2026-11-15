@@ -24,13 +24,13 @@ func (m *MockTokenAuth) Authenticate(ctx context.Context, token string) (domain.
 		role string 
 	)
 	err := m.DB.QueryRowContext(ctx, `
-		SELECT u.id, u.role, COALESCE(u.team_id, '')
+		SELECT u.id, u.role, COALESCE(u.team_id::text, '')
 		FROM mock_auth_tokens t
 		JOIN users u ON u.id = t.user_id
 		WHERE t.token = $1`, token).Scan(&id.UserID, &role, &id.Team)
 	if errors.Is(err, sql.ErrNoRows) {
 		return domain.Identity{}, domain.ErrUnauthorized
-	}
+	}	
 	if err != nil {
 		return domain.Identity{}, fmt.Errorf("authenticate: %w", err)
 	}

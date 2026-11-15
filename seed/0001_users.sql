@@ -3,17 +3,17 @@ INSERT INTO teams (id, name) VALUES
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO users (id, login, full_name, role, team_id, mentor_id, manager_id) VALUES
-    ('u-manager',  'manager', 'Мария Руководитель', 'manager', 'backend', NULL,       NULL),
-    ('u-mentor',   'mentor',  'Михаил Наставник',   'mentor',  'backend', NULL,       'u-manager'),
-    ('u-hr',       'hr',      'Ольга HR',           'hr_bp',   NULL,      NULL,       NULL),
-    ('u-intern-1', 'intern1', 'Анна Стажёр',        'intern',  'backend', 'u-mentor', 'u-manager'),
-    ('u-intern-2', 'intern2', 'Борис Стажёр',       'intern',  'backend', 'u-mentor', 'u-manager')
+    ('c390da66-1700-4705-b5b3-d24c40914e2d', 'manager', 'Мария Руководитель', 'manager',  'backend', NULL,       NULL),
+    ('abff9c90-827e-4e33-b9ec-8c1082a75f63',  'mentor',   'Михаил Наставник',  'mentor',  'backend', NULL,       'c390da66-1700-4705-b5b3-d24c40914e2d'),
+    ('fb8a5a61-d41c-464d-b9ee-fe07b3745136',      'hr',           'Ольга HR',   'hr_bp',   NULL,      NULL,       NULL),
+    ('a2be6219-ca2c-4f3b-bcb1-1e6c07622624', 'intern1',        'Анна Стажёр',  'intern',  'backend', 'abff9c90-827e-4e33-b9ec-8c1082a75f63', 'c390da66-1700-4705-b5b3-d24c40914e2d'),
+    ('28a82a11-925c-4783-a32e-426278bfec83', 'intern2',       'Борис Стажёр',  'intern',  'backend', 'abff9c90-827e-4e33-b9ec-8c1082a75f63', 'c390da66-1700-4705-b5b3-d24c40914e2d')
 ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO mock_auth_tokens (token, user_id) VALUES
-    ('dev-intern-1', 'u-intern-1'),
-    ('dev-intern-2', 'u-intern-2'),
-    ('dev-mentor',   'u-mentor'),
-    ('dev-manager',  'u-manager'),
-    ('dev-hr',       'u-hr')
+    ('dev-intern-1', 'a2be6219-ca2c-4f3b-bcb1-1e6c07622624'),
+    ('dev-intern-2', '28a82a11-925c-4783-a32e-426278bfec83'),
+    ('dev-mentor',   'abff9c90-827e-4e33-b9ec-8c1082a75f63'),
+    ('dev-manager',  'c390da66-1700-4705-b5b3-d24c40914e2d'),
+    ('dev-hr',       'fb8a5a61-d41c-464d-b9ee-fe07b3745136')
 ON CONFLICT (token) DO NOTHING;

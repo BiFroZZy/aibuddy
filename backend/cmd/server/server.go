@@ -8,6 +8,7 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"log/slog"
 	"net/http"
 	"os"
@@ -57,10 +58,9 @@ func (s *Server) Start() error{
 	db.SetConnMaxLifetime(30 * time.Minute)
 
 	if err := database.Migrate(db); err != nil {
-		s.log.Error("migration fail", "error", err)
-	} else {
-		s.log.Info("Migrated successfully")
-	}
+		return fmt.Errorf("apply database migrations: %w", err)
+	} 
+	s.log.Info("database migrations applied")
 
 	authenticator := &repository.MockTokenAuth{DB: db}
 

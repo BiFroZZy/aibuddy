@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"log/slog"
+	"net"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -37,11 +39,10 @@ type Config struct {
 }
 
 func Load(getenv func(string) string) (Config, error) {
-	var DB_URL = "postgres://" + getenv("POSTGRES_USER") + ":" + getenv("POSTGRES_PASSWORD") + "@" + "localhost:" + getenv("POSTGRES_PORT") + "/" + getenv("POSTGRES_DB") + "?sslmode=disable"
 	c := Config{
 		HTTPAddr:    orDefault(getenv("HTTP_ADDR"), ":8080"),
-		DatabaseURL: strings.TrimSpace(DB_URL),
-		CORSOrigin: strings.TrimSpace(getenv("CORS_ALLOWED_ORIGIN")),
+		DatabaseURL: databaseURL(getenv),
+		CORSOrigin:  strings.TrimSpace(getenv("CORS_ALLOWED_ORIGIN")),
 		HRURL:       strings.TrimRight(strings.TrimSpace(getenv("HR_URL")), "/"),
 		AutoMigrate: true,
 	}
@@ -74,14 +75,32 @@ func Load(getenv func(string) string) (Config, error) {
 	return c, nil
 }
 
+func databaseURL(getenv func(string) string) string {
+	if v := strings.TrimSpace(getenv("DATABASE_URL")); v != "" {
+		return v
+	}
+	user := strings.TrimSpace(getenv("POSTGRES_USER"))
+	if user == "" {
+		return ""
+	}
+	u := url.URL{
+		Scheme:   "postgres",
+		User:     url.UserPassword(user, getenv("POSTGRES_PASSWORD")),
+		Host:     net.JoinHostPort(orDefault(getenv("POSTGRES_HOST"), "localhost"), orDefault(getenv("POSTGRES_PORT"), "5432")),
+		Path:     "/" + orDefault(getenv("POSTGRES_DB"), user),
+		RawQuery: "sslmode=disable",
+	}
+	return u.String()
+}
+
 func loadLLM(getenv func(string) string) (LLMConfig, error) {
 	l := LLMConfig{
-		Mode: strings.ToLower(strings.TrimSpace(getenv("LLM_MODE"))),
+		Mode:    strings.ToLower(strings.TrimSpace(getenv("LLM_MODE"))),
 		BaseURL: strings.TrimRight(orDefault(getenv("LLM_BASE_URL"), "https://api.openai.com/v1"), "/"),
-		Model: strings.TrimSpace(getenv("LLM_MODEL")),
-		APIKey: strings.TrimSpace(getenv("LLM_API_KEY")),
+		Model:   strings.TrimSpace(getenv("LLM_MODEL")),
+		APIKey:  strings.TrimSpace(getenv("LLM_API_KEY")),
 		Timeout: 60 * time.Second,
-		MLURL: strings.TrimRight(strings.TrimSpace(getenv("ML_URL")), "/"),
+		MLURL:   strings.TrimRight(strings.TrimSpace(getenv("ML_URL")), "/"),
 	}
 	if v := strings.TrimSpace(getenv("LLM_TIMEOUT")); v != "" {
 		d, err := time.ParseDuration(v)

@@ -20,7 +20,7 @@ func bearerToken(r *http.Request) (string, bool) {
 
 func unauthorized(w http.ResponseWriter) {
 	w.Header().Set("WWW-Authenticate", "Bearer")
-	writeError(w, http.StatusUnauthorized, "unathorized")
+	writeError(w, http.StatusUnauthorized, "unauthorized")
 }
 
 func RequireAuth(a auth.Authenticator, log *slog.Logger) Middleware {

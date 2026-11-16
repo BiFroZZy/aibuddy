@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"time"
 )
 
@@ -22,11 +23,11 @@ type CreateAbsence struct {
 	HR hr.Client
 }
 
-func (CreateAbsence) Name() string {return "create_absence_request"}
+func (CreateAbsence) Name() string { return "create_absence_request" }
 func (CreateAbsence) Description() string {
 	return "Создать заявку на отгул или отпуск для текущего пользователя"
 }
-func (CreateAbsence) RequiresConfirmation() bool {return true}
+func (CreateAbsence) RequiresConfirmation() bool { return true }
 func (CreateAbsence) Schema() json.RawMessage {
 	return json.RawMessage(`{
 	"type": "object",
@@ -47,6 +48,13 @@ func parseAbsence(raw json.RawMessage) (absenceArgs, error) {
 	dec.DisallowUnknownFields()
 	if err := dec.Decode(&a); err != nil {
 		return a, err
+	}
+	var extra any
+	if err := dec.Decode(&extra); !errors.Is(err, io.EOF) {
+		if err == nil {
+			return a, errors.New("multiple JSON values are not allowed")
+		}
+		return a, fmt.Errorf("trailing JSON data: %w", err)
 	}
 	return a, nil
 }

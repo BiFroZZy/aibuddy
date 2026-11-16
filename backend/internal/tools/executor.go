@@ -5,6 +5,7 @@ import (
 	"aibuddy/internal/domain"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"time"
 
@@ -123,8 +124,11 @@ func (e *Executor) execute(ctx context.Context, t Tool, id domain.Identity, act 
 
 	out, err := t.Execute(cctx, id, act.Args, act.IdempotencyKey)
 	if err != nil {
-		_ = e.Repo.Finish(ctx, act.ID, domain.ActionFailed, nil, uuid.Nil, err.Error())
+		finishErr := e.Repo.Finish(ctx, act.ID, domain.ActionFailed, nil, uuid.Nil, err.Error())
 		e.Events.Emit(ctx, id.UserID, "action_failed", map[string]string{"tool": act.Tool})
+		if finishErr != nil {
+			return Result{Status: domain.ActionFailed, ActionID: act.ID}, errors.Join(err, fmt.Errorf("persist failed action: %w", finishErr))
+		}
 		return Result{Status: domain.ActionFailed, ActionID: act.ID}, err
 	}
 

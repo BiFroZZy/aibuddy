@@ -86,7 +86,7 @@ type Action struct {
 	Args           json.RawMessage `json:"args"`
 	Result         json.RawMessage `json:"result,omitempty"`
 	Status         ActionStatus    `json:"status"`
-	IdempotencyKey string          `json:"_"`
+	IdempotencyKey string          `json:"-"`
 	ExternalID     *uuid.UUID      `json:"external_id,omitempty"`
 	Error          string          `json:"error,omitempty"`
 	Summary        string          `json:"summary,omitempty"`

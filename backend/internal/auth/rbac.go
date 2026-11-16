@@ -41,8 +41,8 @@ func DefaultPolicy() StaticPolicy {
 			PermAbsenceCreate, PermAbsenceStatus, PermAccessRequest,
 			PermManageOwnSteps,
 		),
-		domain.RoleMentor:  set(PermProgress, PermSearchKB, PermWhoToAsk),
-		domain.RoleManager: set(PermProgress, PermSearchKB, PermWhoToAsk),
-		domain.RoleHRBP:    set(PermSearchKB, PermWhoToAsk),
+		domain.RoleMentor:  set(PermProgress, PermSearchKB, PermWhoToAsk, PermConfirmStep),
+		domain.RoleManager: set(PermProgress, PermSearchKB, PermWhoToAsk, PermDecideRequest, PermViewMetrics),
+		domain.RoleHRBP:    set(PermSearchKB, PermWhoToAsk, PermViewMetrics),
 	}
 }

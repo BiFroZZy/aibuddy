@@ -70,7 +70,10 @@ func (c *HTTPClient) do(r *http.Request) (Absence, error) {
 	if err != nil {
 		return Absence{}, fmt.Errorf("hr service unavailable: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() {
+		_ = resp.Body.Close()
+	}()
+
 	if resp.StatusCode >= 300 {
 		return Absence{}, fmt.Errorf("hr service: unexpected status %d", resp.StatusCode)
 	}

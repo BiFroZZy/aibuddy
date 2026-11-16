@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/google/uuid"
@@ -130,7 +131,11 @@ func (r *ActionRepo) ListByUser(ctx context.Context, userID uuid.UUID, limit int
 	if err != nil {
 		return nil, fmt.Errorf("list actions: %w", err)
 	}
-	defer rows.Close()
+	defer func() {
+		if err := rows.Close(); err != nil {
+			log.Printf("failed to close rows: %v", err)
+		}
+	}()
 
 	var out []domain.Action
 	for rows.Next() {

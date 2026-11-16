@@ -68,9 +68,9 @@ func (s *Server) Start() error {
 		Handler:           handler,
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       10 * time.Second,
-		WriteTimeout: s.cfg.LLM.Timeout*2 + 30*time.Second,
-		IdleTimeout:  60 * time.Second,
-		ErrorLog:     slog.NewLogLogger(s.log.Handler(), slog.LevelError),
+		WriteTimeout:      s.cfg.LLM.Timeout*2 + 30*time.Second,
+		IdleTimeout:       60 * time.Second,
+		ErrorLog:          slog.NewLogLogger(s.log.Handler(), slog.LevelError),
 	}
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)

@@ -15,15 +15,15 @@ const (
 type ToolCall struct {
 	ID        string
 	Name      string
-	Arguments string 
+	Arguments string
 }
 
 type Message struct {
 	Role       string
 	Content    string
-	ToolCalls  []ToolCall 
-	ToolCallID string   
-	Name       string  
+	ToolCalls  []ToolCall
+	ToolCallID string
+	Name       string
 }
 
 type ToolSpec struct {

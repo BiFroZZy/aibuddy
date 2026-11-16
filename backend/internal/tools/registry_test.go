@@ -536,7 +536,7 @@ func TestConfirmUsesActionIDAsIdempotencyKey(t *testing.T) {
 type slowRequests struct{ fakeRequests }
 
 func (s *slowRequests) Create(ctx context.Context, _ uuid.UUID, _ string, _ json.RawMessage, _, _ string) (uuid.UUID, error) {
-	<-ctx.Done() 
+	<-ctx.Done()
 	return uuid.Nil, ctx.Err()
 }
 

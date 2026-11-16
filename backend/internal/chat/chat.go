@@ -48,7 +48,7 @@ type Service struct {
 type Input struct {
 	ConversationID uuid.UUID
 	Message        string
-	RequestID      string 
+	RequestID      string
 }
 
 type Output struct {

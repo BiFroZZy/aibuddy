@@ -112,7 +112,7 @@ func TestScenario_CorporateServiceOutage(t *testing.T) {
 	if len(r.PendingActions) != 1 {
 		t.Fatalf("proposal must not need the corporate service: %+v", r)
 	}
-	stopHR() 
+	stopHR()
 
 	var failed struct{ Status, Error string }
 	if code := c.call("POST", "/api/actions/"+r.PendingActions[0].ID+"/confirm", testdb.InternToken, nil, &failed); code != 200 ||
@@ -444,7 +444,7 @@ func TestScenario_MLServiceMode(t *testing.T) {
 	for _, tl := range req.Tools {
 		names = append(names, tl.Name)
 	}
-	if len(names) != 5 { 
+	if len(names) != 5 {
 		t.Fatalf("tools offered to an intern: %v", names)
 	}
 

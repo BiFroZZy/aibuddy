@@ -110,7 +110,7 @@ func TestOpenAI_Failures(t *testing.T) {
 func TestOpenAI_NetworkErrorAndCancel(t *testing.T) {
 	srv := httptest.NewServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}))
 	url := srv.URL
-	srv.Close() 
+	srv.Close()
 	if _, err := newClient(url).Chat(context.Background(), nil, nil); !errors.Is(err, domain.ErrLLMUnavailable) {
 		t.Fatalf("network error: %v", err)
 	}

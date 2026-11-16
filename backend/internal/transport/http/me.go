@@ -9,8 +9,8 @@ import (
 
 type meResponse struct {
 	UserID uuid.UUID `json:"user_id"`
-	Role   string `json:"role"`
-	Team   string `json:"team"`
+	Role   string    `json:"role"`
+	Team   string    `json:"team"`
 }
 
 func Me(w http.ResponseWriter, r *http.Request) {

@@ -28,10 +28,10 @@ var (
 
 	Team1ID = uuid.MustParse("11111111-1111-1111-1111-111111111111")
 
-	Step1 = uuid.MustParse("cccccccc-0000-0000-0000-000000000001") 
-	Step2 = uuid.MustParse("cccccccc-0000-0000-0000-000000000002") 
-	Step3 = uuid.MustParse("cccccccc-0000-0000-0000-000000000003") 
-	Step7 = uuid.MustParse("cccccccc-0000-0000-0000-000000000007") 
+	Step1 = uuid.MustParse("cccccccc-0000-0000-0000-000000000001")
+	Step2 = uuid.MustParse("cccccccc-0000-0000-0000-000000000002")
+	Step3 = uuid.MustParse("cccccccc-0000-0000-0000-000000000003")
+	Step7 = uuid.MustParse("cccccccc-0000-0000-0000-000000000007")
 )
 
 const (

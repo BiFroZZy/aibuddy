@@ -58,15 +58,15 @@ type EventRecorder interface {
 }
 
 type Deps struct {
-	Policy   auth.Policy
-	Actions  ActionStore
-	KB       KBSearcher
-	Steps    StepReader
-	People   PeopleFinder
-	Requests RequestService
-	Events   EventRecorder
-	Log      *slog.Logger
-	Clock    func() time.Time
+	Policy      auth.Policy
+	Actions     ActionStore
+	KB          KBSearcher
+	Steps       StepReader
+	People      PeopleFinder
+	Requests    RequestService
+	Events      EventRecorder
+	Log         *slog.Logger
+	Clock       func() time.Time
 	ToolTimeout time.Duration
 }
 
@@ -80,8 +80,8 @@ func idempotencyKeyFrom(ctx context.Context) string {
 type tool struct {
 	spec     llm.ToolSpec
 	mutating bool
-	prepare func(args json.RawMessage, now time.Time) (json.RawMessage, string, error)
-	run func(ctx context.Context, id domain.Identity, args json.RawMessage) (data any, externalID *uuid.UUID, err error)
+	prepare  func(args json.RawMessage, now time.Time) (json.RawMessage, string, error)
+	run      func(ctx context.Context, id domain.Identity, args json.RawMessage) (data any, externalID *uuid.UUID, err error)
 }
 
 type Registry struct {
@@ -187,7 +187,7 @@ func (r *Registry) Confirm(ctx context.Context, id domain.Identity, actionID uui
 	if err != nil {
 		return domain.Action{}, err
 	}
-	if !moved { 
+	if !moved {
 		return domain.Action{}, fmt.Errorf("%w: action was already handled", domain.ErrConflict)
 	}
 

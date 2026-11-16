@@ -135,7 +135,7 @@ func TestHandle_PlainReplyIsStoredAndHistoryIsReused(t *testing.T) {
 	if _, err := svc.Handle(ctx, user, Input{ConversationID: out.ConversationID, Message: "а дальше?"}); err != nil {
 		t.Fatal(err)
 	}
-	second := model.calls[1] 
+	second := model.calls[1]
 	if len(second) != 4 || second[1].Content != "здравствуйте" || second[2].Content != "привет" {
 		t.Fatalf("history must be passed to the model: %+v", second)
 	}

@@ -2,6 +2,19 @@ package auth
 
 import "aibuddy/internal/domain"
 
+const (
+	PermProgress       = "get_my_progress"
+	PermSearchKB       = "search_kb"
+	PermWhoToAsk       = "get_who_to_ask"
+	PermAbsenceCreate  = "create_absence_request"
+	PermAbsenceStatus  = "get_absence_status"
+	PermAccessRequest  = "request_access"
+	PermConfirmStep    = "confirm_step"
+	PermDecideRequest  = "decide_request"
+	PermViewMetrics    = "view_metrics"
+	PermManageOwnSteps = "manage_own_steps"
+)
+
 type Policy interface {
 	Allowed(role domain.Role, tool string) bool
 }
@@ -24,11 +37,12 @@ func set(names ...string) map[string]struct{} {
 func DefaultPolicy() StaticPolicy {
 	return StaticPolicy{
 		domain.RoleIntern: set(
-			"get_my_progress", "search_kb", "get_who_to_ask",
-			"create_absence_request", "get_absence_status", "request_access",
+			PermProgress, PermSearchKB, PermWhoToAsk,
+			PermAbsenceCreate, PermAbsenceStatus, PermAccessRequest,
+			PermManageOwnSteps,
 		),
-		domain.RoleMentor:  set("get_my_progress", "search_kb", "get_who_to_ask"),
-		domain.RoleManager: set("get_my_progress", "search_kb", "get_who_to_ask"),
-		domain.RoleHRBP:    set("search_kb", "get_who_to_ask"),
+		domain.RoleMentor:  set(PermProgress, PermSearchKB, PermWhoToAsk),
+		domain.RoleManager: set(PermProgress, PermSearchKB, PermWhoToAsk),
+		domain.RoleHRBP:    set(PermSearchKB, PermWhoToAsk),
 	}
 }

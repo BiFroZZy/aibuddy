@@ -1,0 +1,503 @@
+/* Product adjustments to the exported visual system. */
+:root {
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  color-scheme: light;
+}
+body {
+  min-width: 320px;
+}
+a {
+  text-decoration: none;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+h1,
+h2,
+h3,
+p,
+dd {
+  overflow-wrap: anywhere;
+}
+textarea {
+  resize: vertical;
+}
+select {
+  max-width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  padding: 10px;
+  color: var(--fg);
+}
+.app {
+  min-height: 100dvh;
+}
+.workspace {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.content {
+  width: 100%;
+  max-width: 1184px;
+  padding: 40px 48px;
+}
+.sidebar {
+  border-right: 1px solid var(--border-soft);
+  height: 100dvh;
+  overflow-y: auto;
+  z-index: 40;
+}
+.sidebar-bottom {
+  padding-top: 20px;
+}
+.brand .buddy-mark {
+  display: grid;
+  grid-template-columns: repeat(2, 12px);
+}
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.topbar {
+  flex-shrink: 0;
+}
+.nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  min-height: 44px;
+  color: var(--fg-2);
+  border-radius: 10px;
+  font-size: 13px;
+}
+.nav a:hover,
+.history-list a:hover {
+  background: var(--bg);
+}
+.nav a.active {
+  background: var(--brand-tint);
+  color: var(--accent-active);
+}
+.nav-icon {
+  width: 20px;
+  font-size: 19px;
+}
+.role-link {
+  display: block;
+  color: var(--accent-active);
+  font-size: 12px;
+  padding: 12px 4px;
+  text-align: left;
+  min-height: 44px;
+}
+.nav-label {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.chat-history {
+  min-height: 80px;
+}
+.history-list {
+  display: grid;
+  gap: 4px;
+  max-height: 180px;
+  overflow: auto;
+}
+.history-list a {
+  display: block;
+  color: var(--fg-2);
+  font-size: 13px;
+  padding: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-height: 36px;
+}
+.history-list a[aria-current] {
+  color: var(--accent-active);
+  background: var(--brand-tint);
+}
+.bottom-note {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 48px;
+  margin-top: auto;
+  font-size: 11px;
+  color: var(--muted);
+}
+.home-layout {
+  max-width: 760px;
+  margin: auto;
+}
+.home-layout .page-head {
+  margin-top: 28px;
+}
+.messages {
+  margin: 28px 0;
+  width: 100%;
+}
+.message {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.message.user {
+  margin-bottom: 20px;
+}
+.message.assistant {
+  padding: 0;
+}
+.request-card {
+  margin-top: 16px;
+}
+.request-card h3 {
+  margin: 16px 0;
+}
+.request-card .actions {
+  margin-top: 16px;
+}
+.quiet-note {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.error-notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid #d7a5ad;
+  color: #813443;
+  background: #fff6f7;
+}
+.next-step {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-top: 1px solid var(--border-soft);
+  margin-top: 32px;
+  padding-top: 24px;
+}
+.next-step p {
+  font-size: 14px;
+}
+.next-step .empty {
+  padding: 12px;
+}
+.toolbar {
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 20px 0;
+}
+.tabs {
+  flex-wrap: wrap;
+}
+.tabs button {
+  min-height: 44px;
+}
+.search {
+  max-width: 100%;
+  width: 280px;
+  margin: 12px 0 20px;
+}
+.split {
+  margin-top: 24px;
+  align-items: start;
+}
+.queue {
+  min-width: 0;
+}
+.queue-item h3 {
+  overflow-wrap: anywhere;
+}
+.facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.facts div {
+  min-width: 0;
+}
+.facts dt {
+  font-size: 12px;
+  color: var(--muted);
+}
+.facts dd {
+  margin: 5px 0 0;
+  font-size: 14px;
+  white-space: pre-wrap;
+}
+.step-control {
+  display: grid;
+  gap: 8px;
+  max-width: 250px;
+}
+.row {
+  gap: 16px;
+}
+.row-details {
+  min-width: 0;
+  flex: 1;
+}
+.row-details p {
+  font-size: 13px;
+  line-height: 1.6;
+}
+.metrics-strip {
+  margin: 24px 0;
+}
+.chart-row {
+  grid-template-columns: minmax(120px, 1fr) minmax(50px, 1fr) auto;
+}
+.chart-row span {
+  font-size: 13px;
+}
+.chart-row .progressbar {
+  min-width: 0;
+}
+.progressbar span {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+}
+.progressbar {
+  overflow: hidden;
+  background: var(--border-soft);
+  height: 5px;
+  border-radius: 5px;
+}
+.field {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+  font-size: 13px;
+}
+.field textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg);
+  color: var(--fg);
+}
+.menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  background: #10182866;
+}
+.skip-link {
+  position: fixed;
+  top: -80px;
+  left: 16px;
+  z-index: 100;
+  background: var(--bg);
+  padding: 12px;
+}
+.skip-link:focus {
+  top: 8px;
+}
+.login.content {
+  max-width: 960px;
+  margin: 40px auto;
+}
+.login .brand {
+  margin-bottom: 48px;
+}
+.role-grid {
+  margin: 32px 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.role-card {
+  text-align: left;
+  min-height: 180px;
+}
+.role-card strong,
+.role-card small {
+  display: block;
+  margin-top: 10px;
+}
+.login .intro {
+  margin-bottom: 24px;
+}
+.panel h2 {
+  margin-top: 8px;
+}
+.materials .doc {
+  margin-bottom: 16px;
+}
+@media (max-width: 1100px) {
+  .content {
+    padding: 28px;
+  }
+  .sidebar {
+    width: auto;
+  }
+  .bottom-note {
+    padding: 24px 28px;
+  }
+  .facts {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 800px) {
+  .sidebar {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 280px;
+    max-width: 85vw;
+  }
+  .sidebar.open {
+    display: flex;
+  }
+  .mobile-menu {
+    display: grid;
+  }
+  .content {
+    padding: 24px 20px;
+  }
+  .topbar {
+    padding: 0 20px;
+  }
+  .topbar .demo {
+    display: none;
+  }
+  .bottom-note {
+    padding: 24px 20px;
+    flex-wrap: wrap;
+  }
+  .breadcrumb {
+    font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+  .split {
+    grid-template-columns: 1fr;
+  }
+  .queue {
+    max-height: 320px;
+    overflow: auto;
+  }
+  .role-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .role-card {
+    min-height: 160px;
+  }
+  .row {
+    flex-wrap: wrap;
+  }
+  .row .step-control {
+    width: 100%;
+    max-width: none;
+  }
+  .row .step-control select {
+    width: 100%;
+  }
+  .next-step {
+    flex-wrap: wrap;
+  }
+  .metrics-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .metric strong {
+    font-size: 28px;
+  }
+  .metric label {
+    font-size: 11px;
+  }
+  .metric p {
+    font-size: 11px;
+  }
+  .error-notice {
+    align-items: start;
+    flex-direction: column;
+  }
+  .composer {
+    padding: 12px;
+  }
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+  .page-head h1 {
+    font-size: 32px;
+  }
+  .login.content {
+    margin-top: 16px;
+  }
+  .login .brand {
+    margin-bottom: 32px;
+  }
+}
+@media (max-width: 430px) {
+  .role-grid {
+    grid-template-columns: 1fr;
+  }
+  .role-card {
+    min-height: 120px;
+  }
+  .metrics-strip {
+    grid-template-columns: 1fr;
+  }
+  .suggestions {
+    grid-template-columns: 1fr;
+  }
+  .chart-row {
+    grid-template-columns: minmax(110px, 1fr) minmax(35px, 0.5fr) auto;
+  }
+  .decision-footer {
+    flex-wrap: wrap;
+  }
+  .btn {
+    min-height: 44px;
+  }
+  .facts {
+    grid-template-columns: 1fr;
+  }
+  .toolbar .tabs {
+    width: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}

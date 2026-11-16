@@ -1,7 +1,6 @@
 package hr
 
 import (
-	"aibuddy/internal/domain"
 	"bytes"
 	"context"
 	"encoding/json"
@@ -13,6 +12,8 @@ import (
 	"strconv"
 	"time"
 
+	"aibuddy/internal/domain"
+
 	"github.com/google/uuid"
 )
 
@@ -21,8 +22,8 @@ type HTTPClient struct {
 	HTTP    *http.Client
 }
 
-func NewHTTPClient(baseURL string) *HTTPClient {
-	return &HTTPClient{BaseURL: baseURL, HTTP: &http.Client{Timeout: 5 * time.Second}}
+func NewHTTPClient(baseURL string, timeout time.Duration) *HTTPClient {
+	return &HTTPClient{BaseURL: baseURL, HTTP: &http.Client{Timeout: timeout}}
 }
 
 type createBody struct {

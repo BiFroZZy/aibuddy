@@ -1,12 +1,13 @@
 package repository
 
 import (
-	"aibuddy/internal/auth"
-	"aibuddy/internal/domain"
 	"context"
 	"database/sql"
 	"errors"
 	"fmt"
+
+	"aibuddy/internal/auth"
+	"aibuddy/internal/domain"
 )
 
 var _ auth.Authenticator = (*MockTokenAuth)(nil)
@@ -20,17 +21,19 @@ func (m *MockTokenAuth) Authenticate(ctx context.Context, token string) (domain.
 		return domain.Identity{}, domain.ErrUnauthorized
 	}
 	var (
-		id domain.Identity
-		role string 
+		id   domain.Identity
+		role string
 	)
 	err := m.DB.QueryRowContext(ctx, `
-		SELECT u.id, u.role, COALESCE(u.team_id::text, '')
-		FROM mock_auth_tokens t
-		JOIN users u ON u.id = t.user_id
-		WHERE t.token = $1`, token).Scan(&id.UserID, &role, &id.Team)
+		SELECT u.id, u.role, COALESCE(t.name, ''),
+		       COALESCE(u.team_id, '00000000-0000-0000-0000-000000000000'::uuid)
+		FROM mock_auth_tokens tk
+		JOIN users u ON u.id = tk.user_id
+		LEFT JOIN teams t ON t.id = u.team_id
+		WHERE tk.token = $1`, token).Scan(&id.UserID, &role, &id.Team, &id.TeamID)
 	if errors.Is(err, sql.ErrNoRows) {
 		return domain.Identity{}, domain.ErrUnauthorized
-	}	
+	}
 	if err != nil {
 		return domain.Identity{}, fmt.Errorf("authenticate: %w", err)
 	}

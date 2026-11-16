@@ -26,7 +26,7 @@ func (r *statusRecorder) WriteHeader(code int) {
 	if r.wrote {
 		return
 	}
-	
+
 	r.status = code
 	r.wrote = true
 	r.ResponseWriter.WriteHeader(code)
@@ -39,9 +39,14 @@ func (r *statusRecorder) Write(b []byte) (int, error) {
 	return r.ResponseWriter.Write(b)
 }
 
-func (r *statusRecorder) Unwrap() http.ResponseWriter { return r.ResponseWriter}
+func (r *statusRecorder) Unwrap() http.ResponseWriter { return r.ResponseWriter }
+
+func (r *statusRecorder) Written() bool { return r.wrote }
 
 func (r *statusRecorder) Flush() {
+	if !r.wrote {
+		r.WriteHeader(http.StatusOK)
+	}
 	_ = http.NewResponseController(r.ResponseWriter).Flush()
 }
 
@@ -49,7 +54,7 @@ func Logging(log *slog.Logger) Middleware {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			start := time.Now()
-			rec := &statusRecorder{ResponseWriter: w, status: http.StatusOK} 
+			rec := &statusRecorder{ResponseWriter: w, status: http.StatusOK}
 			next.ServeHTTP(rec, r)
 
 			level := slog.LevelInfo
@@ -58,7 +63,7 @@ func Logging(log *slog.Logger) Middleware {
 			}
 			log.Log(r.Context(), level, "request",
 				"method", r.Method, "path", r.URL.Path,
-				"status", rec.status, "duration_ms", time.Since(start).Milliseconds())	
+				"status", rec.status, "duration_ms", time.Since(start).Milliseconds())
 		})
 	}
 }
@@ -75,7 +80,9 @@ func Recover(log *slog.Logger) Middleware {
 					panic(rec)
 				}
 				log.Error("panic in handler", "panic", rec, "stack", string(debug.Stack()))
-				writeError(w, http.StatusInternalServerError, "internal error")
+				if tracker, ok := w.(interface{ Written() bool }); !ok || !tracker.Written() {
+					writeError(w, http.StatusInternalServerError, "internal error")
+				}
 			}()
 			next.ServeHTTP(w, r)
 		})

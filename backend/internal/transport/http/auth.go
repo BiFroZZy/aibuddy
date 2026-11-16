@@ -1,12 +1,13 @@
 package httptransport
 
 import (
-	"aibuddy/internal/auth"
-	"aibuddy/internal/domain"
 	"errors"
 	"log/slog"
 	"net/http"
 	"strings"
+
+	"aibuddy/internal/auth"
+	"aibuddy/internal/domain"
 )
 
 func bearerToken(r *http.Request) (string, bool) {
@@ -44,6 +45,23 @@ func RequireAuth(a auth.Authenticator, log *slog.Logger) Middleware {
 				log.Error("authentication backend failure", "err", err)
 				writeError(w, http.StatusServiceUnavailable, "authentication unavailable")
 			}
+		})
+	}
+}
+
+func RequirePermission(p auth.Policy, perm string) Middleware {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			id, ok := auth.IdentityFrom(r.Context())
+			if !ok {
+				unauthorized(w)
+				return
+			}
+			if !p.Allowed(id.Role, perm) {
+				writeError(w, http.StatusForbidden, "forbidden: not available for your role")
+				return
+			}
+			next.ServeHTTP(w, r)
 		})
 	}
 }

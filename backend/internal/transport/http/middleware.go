@@ -26,7 +26,6 @@ func (r *statusRecorder) WriteHeader(code int) {
 	if r.wrote {
 		return
 	}
-
 	r.status = code
 	r.wrote = true
 	r.ResponseWriter.WriteHeader(code)
@@ -41,12 +40,7 @@ func (r *statusRecorder) Write(b []byte) (int, error) {
 
 func (r *statusRecorder) Unwrap() http.ResponseWriter { return r.ResponseWriter }
 
-func (r *statusRecorder) Written() bool { return r.wrote }
-
 func (r *statusRecorder) Flush() {
-	if !r.wrote {
-		r.WriteHeader(http.StatusOK)
-	}
 	_ = http.NewResponseController(r.ResponseWriter).Flush()
 }
 
@@ -80,10 +74,30 @@ func Recover(log *slog.Logger) Middleware {
 					panic(rec)
 				}
 				log.Error("panic in handler", "panic", rec, "stack", string(debug.Stack()))
-				if tracker, ok := w.(interface{ Written() bool }); !ok || !tracker.Written() {
-					writeError(w, http.StatusInternalServerError, "internal error")
-				}
+				writeError(w, http.StatusInternalServerError, "internal error")
 			}()
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
+func CORS(origin string) Middleware {
+	return func(next http.Handler) http.Handler {
+		if origin == "" {
+			return next
+		}
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			reqOrigin := r.Header.Get("Origin")
+			if reqOrigin != "" && (origin == "*" || origin == reqOrigin) {
+				w.Header().Set("Access-Control-Allow-Origin", origin)
+				w.Header().Set("Vary", "Origin")
+				w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
+				w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+			}
+			if r.Method == http.MethodOptions {
+				w.WriteHeader(http.StatusNoContent)
+				return
+			}
 			next.ServeHTTP(w, r)
 		})
 	}

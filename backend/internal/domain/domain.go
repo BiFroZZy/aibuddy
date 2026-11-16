@@ -93,6 +93,15 @@ type Action struct {
 	CreatedAt      time.Time       `json:"created_at"`
 }
 
+const (
+	KindAbsence = "absence"
+	KindAccess  = "access"
+
+	RequestPending  = "pending_approval"
+	RequestApproved = "approved"
+	RequestRejected = "rejected"
+)
+
 type Request struct {
 	ID              uuid.UUID       `json:"id"`
 	Kind            string          `json:"kind"`

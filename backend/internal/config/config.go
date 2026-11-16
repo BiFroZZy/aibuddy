@@ -14,7 +14,7 @@ import (
 const (
 	LLMModeFake   = "fake"
 	LLMModeOpenAI = "openai"
-	LLMMOdeML     = "ml"
+	LLMModeML     = "ml"
 )
 
 type LLMConfig struct {
@@ -109,7 +109,7 @@ func loadLLM(getenv func(string) string) (LLMConfig, error) {
 		if err := errors.Join(errs...); err != nil {
 			return LLMConfig{}, err
 		}
-	case LLMMOdeML:
+	case LLMModeML:
 		if l.MLURL == "" {
 			return LLMConfig{}, errors.New("ML_URL is required when LLM_MODE = ml")
 		}
